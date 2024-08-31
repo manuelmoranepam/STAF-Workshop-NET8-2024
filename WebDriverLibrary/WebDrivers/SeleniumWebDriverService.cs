@@ -8,6 +8,7 @@ using WebDriverLibrary.Interfaces.Configurations;
 using WebDriverLibrary.Interfaces.WebDrivers;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager.Helpers;
 
 namespace WebDriverLibrary.WebDrivers;
 
@@ -38,7 +39,7 @@ public class SeleniumWebDriverService : IWebDriverService
 
 	private IWebDriver CreateChromeDriver()
 	{
-		_ = new DriverManager().SetUpDriver(new ChromeConfig());
+		_ = new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
 
 		var options = GetChromeDriverOptions();
 
@@ -51,7 +52,10 @@ public class SeleniumWebDriverService : IWebDriverService
 	{
 		var options = new ChromeOptions();
 
-		options.AddArgument("--incognito");
+		if (_webDriverConfiguration.IsIncognito)
+		{
+			options.AddArgument("--incognito");
+		}
 
 		ApplyGenericOptions(options);
 
@@ -60,7 +64,7 @@ public class SeleniumWebDriverService : IWebDriverService
 
 	private IWebDriver CreateFirefoxDriver()
 	{
-		_ = new DriverManager().SetUpDriver(new FirefoxConfig());
+		_ = new DriverManager().SetUpDriver(new FirefoxConfig(), VersionResolveStrategy.MatchingBrowser);
 
 		var options = GetFirefoxDriverOptions();
 
@@ -73,7 +77,10 @@ public class SeleniumWebDriverService : IWebDriverService
 	{
 		var options = new FirefoxOptions();
 
-		options.AddArgument("--private");
+		if (_webDriverConfiguration.IsIncognito)
+		{
+			options.AddArgument("--private");
+		}
 
 		ApplyGenericOptions(options);
 
@@ -82,7 +89,7 @@ public class SeleniumWebDriverService : IWebDriverService
 
 	private IWebDriver CreateEdgeDriver()
 	{
-		_ = new DriverManager().SetUpDriver(new EdgeConfig());
+		_ = new DriverManager().SetUpDriver(new EdgeConfig(), VersionResolveStrategy.MatchingBrowser);
 
 		var options = CreateEdgeDriverOptions();
 
@@ -95,7 +102,10 @@ public class SeleniumWebDriverService : IWebDriverService
 	{
 		var options = new EdgeOptions();
 
-		options.AddArgument("--inprivate");
+		if (_webDriverConfiguration.IsIncognito)
+		{
+			options.AddArgument("--inprivate");
+		}
 
 		ApplyGenericOptions(options);
 

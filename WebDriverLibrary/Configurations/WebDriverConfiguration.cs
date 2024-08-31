@@ -17,6 +17,9 @@ public class WebDriverConfiguration : IWebDriverConfiguration
 	[JsonProperty(nameof(IsHeadless))]
 	public bool IsHeadless { get; set; }
 
+	[JsonProperty(nameof(IsIncognito))]
+	public bool IsIncognito { get; set; }
+
 	[JsonProperty(nameof(IsMaximized))]
 	public bool IsMaximized { get; set; }
 

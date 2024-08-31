@@ -10,6 +10,7 @@ public interface IWebDriverConfiguration
 	BrowserType BrowserType { get; set; }
 	TimeSpan ImplicitTimeout { get; set; }
 	bool IsHeadless { get; set; }
+	bool IsIncognito { get; set; }
 	bool IsMaximized { get; set; }
 	TimeSpan LongTimeout { get; set; }
 	TimeSpan MediumTimeout { get; set; }

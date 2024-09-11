@@ -15,13 +15,19 @@ public class FrameworkService
 {
 	private readonly IServiceProvider _serviceProvider;
 
-	public FrameworkService(string filePath)
+	public FrameworkService(string appSettingsFilePath, string loggerFilePath)
 	{
-		ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
+		ArgumentException.ThrowIfNullOrWhiteSpace(appSettingsFilePath);
+		ArgumentException.ThrowIfNullOrWhiteSpace(loggerFilePath);
 
 		_serviceProvider = new ServiceCollection()
-			.AddSingleton<IConfigurationService>(new ConfigurationService(filePath))
-			.AddScoped<ILoggerService, SerilogLoggerService>()
+			.AddSingleton<IConfigurationService>(new ConfigurationService(appSettingsFilePath))
+			.AddScoped<ILoggerService>(provider =>
+			{
+				var configurationService = provider.GetRequiredService<IConfigurationService>();
+
+				return new SerilogLoggerService(configurationService, loggerFilePath);
+			})
 			.AddSingleton<IWebDriverConfiguration, WebDriverConfiguration>()
 			.AddScoped<IWebDriverService, SeleniumWebDriverService>()
 			.BuildServiceProvider();

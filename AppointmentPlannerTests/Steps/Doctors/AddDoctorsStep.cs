@@ -1,4 +1,5 @@
-﻿using AppointmentPlannerTests.Models.Doctors;
+﻿using AppointmentPlannerTests.Extensions;
+using AppointmentPlannerTests.Models.Doctors;
 using AppointmentPlannerTests.Pages.Doctors;
 using LoggerLibrary.Interfaces.Loggers;
 using System;
@@ -13,15 +14,17 @@ public sealed class AddDoctorsStep
 {
 	private readonly ScenarioContext _scenarioContext;
 	private readonly DoctorListPage _doctorListPage;
+	private readonly ILoggerService _loggerService;
 
 	public AddDoctorsStep(ScenarioContext scenarioContext)
 	{
 		_scenarioContext = scenarioContext;
 
 		var webDriverService = scenarioContext["WebDriverService"] as IWebDriverService;
-		var loggerService = scenarioContext["LoggerService"] as ILoggerService;
 
-		_doctorListPage = new DoctorListPage(webDriverService!, loggerService!);
+		_loggerService = (scenarioContext["LoggerService"] as ILoggerService)!;
+
+		_doctorListPage = new DoctorListPage(webDriverService!, _loggerService!);
 	}
 
 	[When(@"I fill and submit the New Doctor form with the following data")]
@@ -31,6 +34,8 @@ public sealed class AddDoctorsStep
 
 		doctor.Email = $"{doctor.FirstName}.{doctor.LastName}.{DateTime.Now.Ticks}@mailinator.com";
 		doctor.MobileNumber = $"1234567890";
+
+		_loggerService.LogInformation("\tDoctor Data:\n" + doctor.ToString<Doctor>());
 
 		_scenarioContext["Doctor"] = doctor;
 
